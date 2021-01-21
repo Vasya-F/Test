@@ -1,6 +1,6 @@
 
-float v_bat
-int t_eng
+float u_battery
+int t_engine
 void setup() {
   // put your setup code here, to run once:
 
@@ -12,14 +12,15 @@ void loop()
   {
     if (can_msg->Data[0] == 0x07)         //Battery voltage
     {
-      v_bat = (can_msg->Data[2] / 10);
-      Serial3.println("Voltage: " + v_bat, 1);
+      v_bat = (can_msg->Data[2] / 10.0);
+      Serial3.print("Voltage: ");
+      Serial3.println(u_battery, 1);
     }
-
     if (can_msg->Data[0] == 0x10)        //Engine temp
     {
       t_eng = (((can_msg->Data[3] * 256) + can_msg->Data[4]) / 10);
-      Serial3.println("Engine temp: " + t_eng);
+      Serial3.print("Engine temp: ");
+      Serial3.println(t_engine);
     }
   }
 }
@@ -39,16 +40,12 @@ void processCommand()
     Serial3.print("Init by the command: ");
     Serial3.println(serialBuffer);
   }
-  else if (strcmp(serialBuffer, "CMD") == 0)
-  {
+  /*
+    else if (strcmp(serialBuffer, "CMD") == 0)
+    {
     // another command here
-  }
-  else
-  {
-    // remove in the final code
-    Serial3.print("Unknown command: ");
-    Serial3.println(serialBuffer);
-  }
+    }
+  */
 }
 
 void setup()
