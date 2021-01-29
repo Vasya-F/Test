@@ -1,3 +1,4 @@
+//#define MD_INIT_DELAY 3000
 
 float u_battery
 int t_engine
@@ -22,6 +23,11 @@ void loop()
       Serial3.print("Engine temp: ");
       Serial3.println(t_engine);
     }
+  }
+
+  while (Serial1.available() > 0)  //read serial port
+  {
+    Serial1.read();
   }
 }
 
@@ -51,7 +57,7 @@ void processCommand()
 void setup()
 {
   Serial3.begin(115200);
-  Serial3.println(F("Starting..."));
+  Serial3.println("Starting...");
 }
 
 void loop()
@@ -77,4 +83,28 @@ void loop()
         serialBufferIdx = 0;
     }
   }
+}
+
+
+unsigned long lastTime = 0;
+
+unsigned long ms = millis();
+if (initCommandIdx < 2 && ms - lastTime > MD_INIT_DELAY)
+{
+  lastTime = ms;
+  if (initCommandIdx < 1 )
+  {
+    Serial3.println("if AUX_mode");
+    if (!AUX_mode)
+    {
+      Serial1.println(MD_PAUSE);
+      Serial3.println("MD_PAUSE");
+    }
+  }
+  else if (initCommandIdx < 2)
+  {
+    Serial1.println(MD_RANDOM_TRACK);
+    Serial3.println("MD_RANDOM_TRACK");
+  }
+  initCommandIdx++;
 }
